@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title> States Vs Cities Distribution </title>
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"> -->
+
+<style>
+
+.link {
+  stroke: rgb(28, 163, 204);
+}
+
+.node {
+  stroke: rgb(18, 135, 150);
+}
+h1 {color: rgb(27, 117, 129);}
+
+/* table, th, td {
+    border: 1px solid white;
+    border-collapse: collapse;
+  } */
+  /* th, td {
+    padding: 15px;
+    text-align: left;
+  }
+  table#t01 {
+  
+    color: white;  
+    background-color: #009bdf;
+  } */
+
+
+</style>
+<body>
+<h1 style="text-align:center;">States Vs Cities Distribution</h1>
+
+<img src = "graph.png" ></img>
+
+
+<!-- <h1 style="text-align:center;">Centered Heading</h1>
+<p style="text-align:center;">Centered paragraph.</p> -->
+
+
+<!-- <br>
+<table id="t01">
+  <tr>
+    <th>States</th>
+    <th>Number Of Cities</th> 
+    
+  </tr>
+  <tr>
+    <td>CA</td>
+    <td>34</td>
+    
+  </tr>
+  <tr>
+    <td>CO</td>
+    <td>1</td>
+    
+  </tr>
+  <tr>
+    <td>DC</td>
+    <td>1</td>
+    
+  </tr>
+    <tr>
+    <td>GA</td>
+    <td>1</td>
+    
+  </tr>
+  <tr>
+    <td>IL</td>
+    <td>1</td>
+    
+  </tr>
+  <tr>
+    <td>MA</td>
+    <td>2</td>
+    
+  </tr>
+  
+    <tr>
+    <td>NJ</td>
+    <td>31</td>
+    
+  </tr>
+    <tr>
+    <td>NY</td>
+    <td>16</td>
+    
+  </tr>
+  <tr>
+    <td>TX</td>
+    <td>3</td>
+    
+  </tr>
+  <tr>
+    <td>WA</td>
+    <td>2</td>
+    
+  </tr>
+</table> -->
+
+
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = 1000,
+    height = 1000;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var force = d3.layout.force()
+    .size([width, height]);
+
+d3.csv("graph.csv", function(error, links) {
+  if (error) throw error;
+
+  var nodesByName = {};
+
+  // Create nodes for each unique source and target.
+  links.forEach(function(link) {
+    link.source = nodeByName(link.source);
+    link.target = nodeByName(link.target);
+  });
+
+  // Extract the array of nodes from the map by name.
+  var nodes = d3.values(nodesByName);
+
+  // Create the link lines.
+  var link = svg.selectAll(".link")
+      .data(links)
+    .enter().append("line")
+      .attr("class", "link");
+
+  // Create the node circles.
+  var node = svg.selectAll(".node")
+      .data(nodes)
+    .enter().append("circle")
+      .attr("class", "node")
+      .attr("r", 5.5)
+      .call(force.drag);
+
+  // Start the force layout.
+  force
+      .nodes(nodes)
+      .links(links)
+      .on("tick", tick)
+      .start();
+
+  function tick() {
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+  }
+
+  function nodeByName(name) {
+    return nodesByName[name] || (nodesByName[name] = {name: name});
+  }
+
+//   // Create Event Handlers for mouse
+//   function handleMouseOver(d, i) {  // Add interactivity
+
+//   // Use D3 to select element, change color and size
+//   d3.select(this).attr({
+//     fill: "orange",
+//     r: radius * 2
+//   });
+
+// // Specify where to put label of text
+// svg.append("text").attr({
+//    id: "t" + d.x + "-" + d.y + "-" + i,  // Create an id for text so we can select it later for removing on mouseout
+//     x: function() { return xScale(d.x) - 30; },
+//     y: function() { return yScale(d.y) - 15; }
+// })
+// .text(function() {
+//   return [d.x, d.y];  // Value of the text
+// });
+// }
+
+// function handleMouseOut(d, i) {
+// // Use D3 to select element, change color back to normal
+// d3.select(this).attr({
+//   fill: "black",
+//   r: radius
+// });
+
+// // Select text by id and then remove
+// d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();  // Remove text location
+// }
+
+});
+
+</script>
